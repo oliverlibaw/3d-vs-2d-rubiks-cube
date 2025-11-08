@@ -1,0 +1,28 @@
+
+
+
+
+This project is meant to create a visual representation of the regular 3D rubik's cube as a 3 separate 2D matrices. the first matrix is a 3x3 and contains the color information for each block in the top layer of the cube. the second matrix is also 3x3, but has a 0 or empty value in the center square, since the block at the center of the Rubik's cube is not colored.
+
+
+
+I want to then show one might solve a rubik's cube using a visual representation of 2D matrix multiplication. I'm going to take just 2 of the matrices (representing the top layer and middle layer) and perform calculations (swapping individual blocks). I will need to put some blocks aside because they belong in the third matrix. then I will do a separate calculation with matrix representing the top layer and the bottom layer, and so on.
+
+
+
+My goal is to show that working in 2D space is much more complicated than working in 3D space, where I can simply rotate the cube along any of the three axes.
+
+
+
+
+1. The user should be able to manipulate the 3D model of the cube, rotating rows and columns as they want. 
+
+
+
+
+
+2. The 2D model of the cube should then start with the same layout as the current version of the 3D model. in other words, the color or colors of each block in each layer should be the same as in the 3D model. 
+
+
+
+3. in order for the 2D and 3D versions to represent the same cube, we need to update the 2D version. Each square in the 2D version will actually have 1, 2, or 3 colors. a corner piece will have 3 colors (one for each visible face), for example. 
