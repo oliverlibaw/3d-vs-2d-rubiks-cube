@@ -246,6 +246,53 @@
             }
         }
 
+        /* Welcome Popup Styles */
+        #welcome-popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: none; /* Initially hidden */
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        #welcome-popup {
+            background-color: #3a3a3a;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.5);
+            width: 90%;
+            max-width: 600px;
+            text-align: center;
+        }
+
+        #popup-content {
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #f0f0f0;
+        }
+
+        #popup-continue-btn {
+            background-color: #007bff;
+            color: white;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+        }
+
+        #popup-continue-btn:hover {
+            background-color: #0056b3;
+        }
+
     </style>
 </head>
 <body>
@@ -282,19 +329,19 @@
             
             <div class="matrices-container">
                 <div class="matrix-wrapper">
-                    <h3>Top Layer (U Face)</h3>
+                    <h3>Top Layer</h3>
                     <div class="matrix m-top" id="matrix-top">
                         <!-- Cells populated by JS --></div>
                 </div>
 
                 <div class="matrix-wrapper">
-                    <h3>Middle Layer (E Slice)</h3>
+                    <h3>Middle Layer</h3>
                     <div class="matrix m-mid" id="matrix-mid">
                         <!-- Cells populated by JS --></div>
                 </div>
 
                 <div class="matrix-wrapper">
-                    <h3>Bottom Layer (D Face)</h3>
+                    <h3>Bottom Layer</h3>
                     <div class="matrix m-bot" id="matrix-bot">
                         <!-- Cells populated by JS --></div>
                 </div>
@@ -305,6 +352,14 @@
                 <div id="holding-bay"></div>
                 <textarea id="log" readonly></textarea>
             </div>
+        </div>
+    </div>
+
+    <!-- Welcome Popup -->
+    <div id="welcome-popup-overlay">
+        <div id="welcome-popup">
+            <p id="popup-content"></p>
+            <button id="popup-continue-btn">Continue</button>
         </div>
     </div>
 
@@ -1138,6 +1193,56 @@
         init2DInteraction();
         animate();
 
+    </script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const popupOverlay = document.getElementById('welcome-popup-overlay');
+            const popupContent = document.getElementById('popup-content');
+            const continueBtn = document.getElementById('popup-continue-btn');
+
+            const tutorialTexts = [
+                "Rubik's Cubes are 3D objects (it's a cube, after all) and we are used to solving them in 3D space -- by twisting it along any of the three different axes.",
+                "But you can also represent the Cube in 2D space. For this demo, I chopped it into 3 slices. The top slice represents the 9 blocks in the top layer, the middle slice represents the 8 block in the middle layer. (The center block isn't part of the puzzle.)",
+                "This demo is meant to illustrate that taking 3D data (the original Cube) and chopping it into 2D data makes it harder to do stuff. In this case, we can see that solving the puzzle is harder and less intuitive when working with the 2D, flat representation.",
+                "To use the demo: first scramble the 3D cube using the keyboard shortcuts. You'll see the 2D puzzle change to match the 3D version.",
+                "Each square in the 2D version contains the same info as in the 3D version. The corner square in the top layer, for example, has the same three colors on the top corner of the 3D cube.",
+                "When you click \"Solve 2D puzzle\", the app starts swapping tiles around in order to restore the original layout. It worls with just 2 layers at a time (a bit like matrix multiplication) and uses the Holding Bay to temporarily store pieces that should go in the third layer.",
+                "The \"Solve 2D puzzle\" button is meant to show that solving the puzzle in 2D is unintuitive and takes a lot of steps.",
+                "When you click \"Solve the puzzle in 3D\", the cube reverses the moves you made to get back to the original position. The idea is that this is much more intuitive (you can see how blocks relate to each other in 3D space) and faster and easier to solve.",
+                "That's it. Give it a try!"
+            ];
+
+            let currentTextIndex = 0;
+
+            function showPopup() {
+                popupContent.innerHTML = tutorialTexts[currentTextIndex];
+                popupOverlay.style.display = 'flex';
+            }
+
+            function nextText() {
+                currentTextIndex++;
+                if (currentTextIndex < tutorialTexts.length) {
+                    popupContent.innerHTML = tutorialTexts[currentTextIndex];
+                    if (currentTextIndex === tutorialTexts.length - 1) {
+                        continueBtn.textContent = 'Give it a try!';
+                    }
+                } else {
+                    hidePopup();
+                }
+            }
+
+            function hidePopup() {
+                popupOverlay.style.display = 'none';
+            }
+
+            continueBtn.addEventListener('click', nextText);
+
+            // Check if the user has visited before
+            if (!localStorage.getItem('hasVisitedRubikDemo')) {
+                localStorage.setItem('hasVisitedRubikDemo', 'true');
+                showPopup();
+            }
+        });
     </script>
 </body>
 </html>
