@@ -293,6 +293,57 @@
             background-color: #0056b3;
         }
 
+        /* Contextual Popup Styles */
+        .contextual-popup {
+            position: absolute;
+            background-color: #222;
+            color: #fff;
+            padding: 1rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+            z-index: 1001;
+            max-width: 250px;
+            font-size: 0.95rem;
+            line-height: 1.5;
+            border: 1px solid #555;
+        }
+
+        .contextual-popup::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 0;
+            border: 10px solid transparent;
+        }
+
+        .contextual-popup.popup-left::after {
+            left: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            border-left-color: #222;
+        }
+
+        .contextual-popup.popup-right::after {
+            right: 100%;
+            top: 50%;
+            transform: translateY(-50%);
+            border-right-color: #222;
+        }
+        
+        .contextual-popup.popup-top::after {
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-top-color: #222;
+        }
+
+        .contextual-popup.popup-bottom::after {
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            border-bottom-color: #222;
+        }
+
     </style>
 </head>
 <body>
@@ -386,7 +437,7 @@
             X: '#333333'  // For uncolored inner faces or middle of 2D middle matrix
         };
 
-        const CUBIE_SIZE = 1;
+        const CUBIE_SIZE = 0.7;
         const CUBE_GAP = 0.08; // Space between cubies
         const PI = Math.PI;
 
@@ -1195,54 +1246,166 @@
 
     </script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const popupOverlay = document.getElementById('welcome-popup-overlay');
-            const popupContent = document.getElementById('popup-content');
-            const continueBtn = document.getElementById('popup-continue-btn');
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Welcome Popup Logic ---
+        const popupOverlay = document.getElementById('welcome-popup-overlay');
+        const popupContent = document.getElementById('popup-content');
+        const continueBtn = document.getElementById('popup-continue-btn');
 
-            const tutorialTexts = [
-                "Rubik's Cubes are 3D objects (it's a cube, after all) and we are used to solving them in 3D space -- by twisting it along any of the three different axes.",
-                "But you can also represent the Cube in 2D space. For this demo, I chopped it into 3 slices. The top slice represents the 9 blocks in the top layer, the middle slice represents the 8 block in the middle layer. (The center block isn't part of the puzzle.)",
-                "This demo is meant to illustrate that taking 3D data (the original Cube) and chopping it into 2D data makes it harder to do stuff. In this case, we can see that solving the puzzle is harder and less intuitive when working with the 2D, flat representation.",
-                "To use the demo: first scramble the 3D cube using the keyboard shortcuts. You'll see the 2D puzzle change to match the 3D version.",
-                "Each square in the 2D version contains the same info as in the 3D version. The corner square in the top layer, for example, has the same three colors on the top corner of the 3D cube.",
-                "When you click \"Solve 2D puzzle\", the app starts swapping tiles around in order to restore the original layout. It worls with just 2 layers at a time (a bit like matrix multiplication) and uses the Holding Bay to temporarily store pieces that should go in the third layer.",
-                "The \"Solve 2D puzzle\" button is meant to show that solving the puzzle in 2D is unintuitive and takes a lot of steps.",
-                "When you click \"Solve the puzzle in 3D\", the cube reverses the moves you made to get back to the original position. The idea is that this is much more intuitive (you can see how blocks relate to each other in 3D space) and faster and easier to solve.",
-                "That's it. Give it a try!"
-            ];
+        const tutorialTexts = [
+            "Rubik's Cubes are 3D objects (it's a cube, after all) and we are used to solving them in 3D space -- by twisting it along any of the three different axes.",
+            "But you can also represent the Cube in 2D space. For this demo, I chopped it into 3 slices. The top slice represents the 9 blocks in the top layer, the middle slice represents the 8 block in the middle layer. (The center block isn't part of the puzzle.)",
+            "This demo is meant to illustrate that taking 3D data (the original Cube) and chopping it into 2D data makes it harder to do stuff. In this case, we can see that solving the puzzle is harder and less intuitive when working with the 2D, flat representation.",
+            "To use the demo: first scramble the 3D cube using the keyboard shortcuts. You'll see the 2D puzzle change to match the 3D version.",
+            "Each square in the 2D version contains the same info as in the 3D version. The corner square in the top layer, for example, has the same three colors on the top corner of the 3D cube.",
+            "When you click \"Solve 2D puzzle\", the app starts swapping tiles around in order to restore the original layout. It worls with just 2 layers at a time (a bit like matrix multiplication) and uses the Holding Bay to temporarily store pieces that should go in the third layer.",
+            "The \"Solve 2D puzzle\" button is meant to show that solving the puzzle in 2D is unintuitive and takes a lot of steps.",
+            "When you click \"Solve the puzzle in 3D\", the cube reverses the moves you made to get back to the original position. The idea is that this is much more intuitive (you can see how blocks relate to each other in 3D space) and faster and easier to solve.",
+            "That's it. Give it a try!"
+        ];
 
-            let currentTextIndex = 0;
+        let currentTextIndex = 0;
 
-            function showPopup() {
+        function showWelcomePopup() {
+            popupContent.innerHTML = tutorialTexts[currentTextIndex];
+            popupOverlay.style.display = 'flex';
+        }
+
+        function nextWelcomeText() {
+            currentTextIndex++;
+            if (currentTextIndex < tutorialTexts.length) {
                 popupContent.innerHTML = tutorialTexts[currentTextIndex];
-                popupOverlay.style.display = 'flex';
+                if (currentTextIndex === tutorialTexts.length - 1) {
+                    continueBtn.textContent = 'Give it a try!';
+                }
+            } else {
+                hideWelcomePopup();
+            }
+        }
+
+        function hideWelcomePopup() {
+            popupOverlay.style.display = 'none';
+            startContextualPopups();
+        }
+
+        continueBtn.addEventListener('click', nextWelcomeText);
+
+        // --- Contextual Popup Logic (Simplified) ---
+        const contextualPopups = [
+            {
+                element: '#matrix-mid',
+                text: "This 2D representation has the same info as the 3D cube. Each tile shows the same colors as the corresponding block in the cube. It's just been flattened.",
+                position: 'right'
+            },
+            {
+                element: '#three-container',
+                text: "Try twisting the cube using the keyboard shortcuts.",
+                position: 'right'
+            },
+            {
+                element: '#demo-2d',
+                text: "The 2D representation updates to match the cube.",
+                position: 'right',
+                duration: 3000
+            },
+            {
+                element: '#solve-2d-btn',
+                text: "Click the 'Solve 2D Puzzle' button to solve it. You'll see it takes a lot of steps and it's hard to follow what's going on. That's because it's very hard to see how all the tiles relate to each other.",
+                position: 'bottom',
+                duration: 3000
+            },
+            {
+                element: '#solve-3d',
+                text: "When we keep the 3D representation of the data, you get a holistic view of what's going on. It's easier to solve. And faster, since you can manipulate the cube along 3 different axes.",
+                position: 'bottom'
+            }
+        ];
+
+        let activePopup = null;
+
+        function createPopup(popupInfo) {
+            if (activePopup) {
+                document.body.removeChild(activePopup);
             }
 
-            function nextText() {
-                currentTextIndex++;
-                if (currentTextIndex < tutorialTexts.length) {
-                    popupContent.innerHTML = tutorialTexts[currentTextIndex];
-                    if (currentTextIndex === tutorialTexts.length - 1) {
-                        continueBtn.textContent = 'Give it a try!';
-                    }
+            const targetElement = document.querySelector(popupInfo.element);
+            if (!targetElement) {
+                console.error("Contextual popup target not found:", popupInfo.element);
+                return null;
+            }
+
+            const popup = document.createElement('div');
+            popup.className = `contextual-popup popup-${popupInfo.position}`;
+            popup.innerHTML = popupInfo.text;
+            document.body.appendChild(popup);
+            activePopup = popup;
+
+            const targetRect = targetElement.getBoundingClientRect();
+            const popupRect = popup.getBoundingClientRect();
+
+            let top, left;
+
+            switch (popupInfo.position) {
+                case 'right':
+                    top = targetRect.top + (targetRect.height / 2) - (popupRect.height / 2);
+                    left = targetRect.right + 20;
+                    break;
+                case 'left':
+                    top = targetRect.top + (targetRect.height / 2) - (popupRect.height / 2);
+                    left = targetRect.left - popupRect.width - 20;
+                    break;
+                case 'bottom':
+                    top = targetRect.bottom + 20;
+                    left = targetRect.left + (targetRect.width / 2) - (popupRect.width / 2);
+                    break;
+                case 'top':
+                    top = targetRect.top - popupRect.height - 20;
+                    left = targetRect.left + (targetRect.width / 2) - (popupRect.width / 2);
+                    break;
+            }
+
+            popup.style.top = `${top + window.scrollY}px`;
+            popup.style.left = `${left + window.scrollX}px`;
+            
+            return popup;
+        }
+
+        async function startContextualPopups() {
+            for (const popupInfo of contextualPopups) {
+                const popupElement = createPopup(popupInfo);
+                if (!popupElement) continue; // Skip if target element not found
+
+                if (popupInfo.duration) {
+                    await new Promise(resolve => setTimeout(resolve, popupInfo.duration));
                 } else {
-                    hidePopup();
+                    await new Promise(resolve => {
+                        const onClick = (event) => {
+                            // Prevent clicks inside the popup from closing it
+                            if (event.target.closest('.contextual-popup')) {
+                                return;
+                            }
+                            document.body.removeEventListener('click', onClick, true);
+                            resolve();
+                        };
+                        // Use capture to catch the click early
+                        document.body.addEventListener('click', onClick, true);
+                    });
                 }
             }
-
-            function hidePopup() {
-                popupOverlay.style.display = 'none';
+            // After the loop, remove the last popup
+            if (activePopup) {
+                document.body.removeChild(activePopup);
+                activePopup = null;
             }
+        }
 
-            continueBtn.addEventListener('click', nextText);
-
-            // Check if the user has visited before
-            if (!localStorage.getItem('hasVisitedRubikDemo')) {
-                localStorage.setItem('hasVisitedRubikDemo', 'true');
-                showPopup();
-            }
-        });
+        // --- Initializer ---
+        // Check if the user has visited before. For this demo, we can use sessionStorage.
+        if (!sessionStorage.getItem('hasVisitedRubikDemo')) {
+            showWelcomePopup();
+            sessionStorage.setItem('hasVisitedRubikDemo', 'true');
+        }
+    });
     </script>
 </body>
 </html>
