@@ -40,9 +40,9 @@
 
         .main-container {
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr; /* Stack the demos vertically */
             gap: 2rem;
-            max-width: 1400px;
+            max-width: 900px; /* Adjusted max-width for a single column layout */
             margin: 0 auto;
             flex-grow: 1;
         }
@@ -52,9 +52,85 @@
             border-radius: 12px;
             padding: 1.5rem;
             box-shadow: 0 4px 12px rgba(0,0,0,0.3);
-            min-height: 500px;
             display: flex;
             flex-direction: column;
+        }
+
+        .demo-grid-container {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            align-items: center;
+            gap: 1rem;
+            min-height: 300px;
+        }
+
+        .left-controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .left-controls h2 {
+            margin-bottom: 0;
+        }
+
+        .right-instructions {
+            font-size: 0.85em;
+            color: #ccc;
+            text-align: left;
+            padding-left: 1rem;
+        }
+
+        #three-container {
+            min-height: 300px;
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        #demo-2d {
+            display: flex;
+            flex-direction: column;
+        }
+
+        #demo-2d .left-controls {
+            margin-bottom: 1rem;
+        }
+
+        .matrices-container {
+            display: flex;
+            flex-direction: row;
+            justify-content: center;
+            gap: 1.5rem;
+            width: 100%;
+        }
+        
+        .matrix-wrapper.shrunken {
+            transform: scale(0.8);
+            opacity: 0.6;
+            z-index: 1;
+        }
+        
+        .matrix-wrapper {
+            transition: transform 0.3s ease, opacity 0.3s ease;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .matrix-wrapper h3 {
+            cursor: pointer;
+            user-select: none;
+            padding: 0.5rem;
+            border-radius: 6px;
+            background-color: #2a2a2a;
+            transition: background-color 0.2s;
+        }
+
+        .matrix-wrapper h3.selected {
+            background-color: #007bff;
+            color: white;
         }
 
         .controls {
@@ -124,116 +200,59 @@
         /* --- 2D Demo Styles --- */
         .matrices-container {
             display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 1rem; /* Reduced gap as cells are now larger */
+            flex-direction: row; /* Arrange layers side-by-side */
+            align-items: flex-start; /* Align to the top */
+            gap: 1.5rem;
             flex-grow: 1;
-            justify-content: center; /* Center matrices vertically */
+            justify-content: center;
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
         }
 
         .matrix-wrapper { 
             text-align: center; 
-            transition: transform 0.4s ease, opacity 0.4s ease;
         }
-        .matrix-wrapper.inactive {
-            transform: translateX(-200px);
-            opacity: 0.5;
-        }
-        .matrix-wrapper h3 { margin: 0 0 0.5rem 0; font-weight: 500; }
-
-        .matrix {
-            display: grid;
-            grid-template-columns: repeat(3, 70px); /* Larger cells */
-            grid-template-rows: repeat(3, 70px);
-            border: 2px solid #888;
-            width: 216px; /* 3 * 70 + 2 * 2px border */
-            height: 216px;
-            transition: border-color 0.3s ease;
-        }
-        .matrix.drop-target {
-            border-color: #00ff80;
-            box-shadow: 0 0 15px #00ff80;
+        .matrix-wrapper h3 { 
+            margin: 0 0 0.5rem 0; 
+            font-weight: 500; 
         }
 
-        .matrix-cell {
-            width: 100%;
-            height: 100%;
-            box-sizing: border-box;
-            border: var(--cell-border);
-            background-color: var(--color-gray); /* Default background for empty/center */
+        .layer-container {
+            width: 220px;
+            height: 220px;
+            background-color: #2a2a2a;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        .layer-container canvas {
+            display: block;
+        }
+
+        .matrix-selection {
             display: flex;
-            flex-wrap: wrap; /* Allows multiple colors in one cell */
-            justify-content: center;
+            gap: 1rem;
+            background-color: #2a2a2a;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
             align-items: center;
-            overflow: hidden; /* Hide overflow if too many color squares */
-            cursor: grab;
-            transition: transform 0.2s ease, opacity 0.2s ease;
+            margin-bottom: 1rem; /* Add some space below the checkboxes */
         }
-        .matrix-cell.dragging {
-            opacity: 0.4;
-            transform: scale(0.9);
-            cursor: grabbing;
+        .matrix-selection label {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            cursor: pointer;
         }
-        .matrix-cell:not([draggable="true"]) {
-            cursor: not-allowed;
-        }
-        
-        /* Specific styling for the actual color squares within a matrix-cell */
-        .color-square {
-            width: 100%; /* For single color cells */
-            height: 100%; /* For single color cells */
-            flex-shrink: 0; /* Don't shrink when multiple */
-            box-sizing: border-box;
-            pointer-events: none;
-        }
-
-        .matrix-cell[data-colors="2"] .color-square { width: 50%; height: 100%; }
-        .matrix-cell[data-colors="3"] .color-square:nth-child(1) { width: 100%; height: 50%; }
-        .matrix-cell[data-colors="3"] .color-square:nth-child(2) { width: 50%; height: 50%; }
-        .matrix-cell[data-colors="3"] .color-square:nth-child(3) { width: 50%; height: 50%; }
-        
 
         .log-area {
             margin-top: 1.5rem;
             width: 100%;
+            text-align: center;
         }
-        .log-area h3 { text-align: center; margin-bottom: 0.5rem; font-weight: 500;}
-        #holding-bay {
-            width: 100%;
-            min-height: 80px;
-            background-color: #1e1e1e;
+        #holding-bay-container {
+            margin: 0 auto; /* Center the holding bay */
+            background-color: #1e1e1e; /* Darker background */
             border: 2px dashed #555;
-            border-radius: 8px;
-            margin-bottom: 1rem;
-            padding: 0.5rem;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 5px;
-            align-content: flex-start;
-            transition: border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        #holding-bay.drop-target {
-            border-color: #00ff80;
-            box-shadow: 0 0 15px #00ff80 inset;
-        }
-        #holding-bay .matrix-cell {
-            width: 50px;
-            height: 50px;
-            cursor: grab;
-        }
-
-        #log {
-            width: 100%;
-            box-sizing: border-box;
-            height: 100px;
-            background-color: #1e1e1e;
-            color: #00ff80;
-            font-family: monospace;
-            font-size: 0.9rem;
-            padding: 0.5rem;
-            border: 1px solid #555;
-            border-radius: 4px;
-            resize: vertical;
         }
 
         /* Responsive layout */
@@ -351,57 +370,55 @@
     <h1>Interactive Rubik's Cube: 3D vs. 2D Data Representation</h1>
 
     <div class="main-container">
-        <!-- ========================== --><!-- 3D DEMO COLUMN (THREE.JS) --><!-- ========================== --><div class="demo-box" id="demo-3d">
-            <h2>3D Model: Intuitive Interaction</h2>
-            <div class="controls">
-                <button id="reset-3d">Reset 3D Cube</button>
-                <button id="solve-3d">Solve 3D Cube</button>
-                <span id="moves-3d" style="margin-left: 1rem; font-weight: 600;">Moves: 0</span>
+        <!-- ========================== --><!-- 3D DEMO (THREE.JS) --><!-- ========================== --><div class="demo-box" id="demo-3d">
+            <div class="demo-grid-container">
+                <div class="left-controls">
+                    <h2>3D Model</h2>
+                    <button id="reset-3d">Reset</button>
+                    <button id="solve-3d">Solve</button>
+                    <span id="moves-3d" style="font-weight: 600;">Moves: 0</span>
+                </div>
+                <div id="three-container"></div>
+                <p class="right-instructions">
+                    Click and drag to orbit, scroll to zoom. Use keyboard keys for face turns:<br>
+                    <b>U/u, D/d, F/f, B/b, L/l, R/r</b> (CW/CCW).<br>
+                    <b>M/m, E/e, S/s</b> for middle slice turns.
+                </p>
             </div>
-            <p class="instructions-3d">
-                Click and drag to orbit, scroll to zoom. Use keyboard keys for face turns:<br>
-                <b>U/u, D/d, F/f, B/b, L/l, R/r</b> for face turns (upper/lowercase for CW/CCW).<br>
-                <b>M/m, E/e, S/s</b> for middle slice turns.
-            </p>
-            <div id="three-container"></div>
         </div>
 
-        <!-- ========================== --><!-- 2D DEMO COLUMN (Matrices) --><!-- ========================== --><div class="demo-box" id="demo-2d">
-            <h2>2D Model: Complex Data Shuffling</h2>
+        <!-- ========================== --><!-- 2D DEMO (Matrices) --><!-- ========================== --><div class="demo-box" id="demo-2d">
+            <h2>2D Model</h2>
             <div class="controls">
-                <div class="matrix-selection">
+                 <div class="matrix-selection">
+                    <span>Active Layers:</span>
                     <label><input type="checkbox" name="matrix-select" value="top" checked> Top</label>
                     <label><input type="checkbox" name="matrix-select" value="mid" checked> Mid</label>
                     <label><input type="checkbox" name="matrix-select" value="bot"> Bot</label>
-                    <button id="solve-2d-btn">Solve 2D Puzzle</button>
-                    <span id="move-counter" style="margin-left: 1rem; font-weight: 600;">Moves: 0</span>
                 </div>
+                 <button id="solve-2d-btn">Solve 2D</button>
+                 <span id="moves-2d" style="font-weight: 600;">Moves: 0</span>
             </div>
-            
-            <div class="matrices-container">
+            <div class="matrices-container" id="layers-container-2d">
                 <div class="matrix-wrapper">
-                    <h3>Top Layer</h3>
-                    <div class="matrix m-top" id="matrix-top">
-                        <!-- Cells populated by JS --></div>
+                    <h3 data-layer="top">Top Layer</h3>
+                    <div class="layer-container" id="top-layer-container" draggable="true"></div>
                 </div>
 
                 <div class="matrix-wrapper">
-                    <h3>Middle Layer</h3>
-                    <div class="matrix m-mid" id="matrix-mid">
-                        <!-- Cells populated by JS --></div>
+                    <h3 data-layer="mid">Middle Layer</h3>
+                    <div class="layer-container" id="mid-layer-container" draggable="true"></div>
                 </div>
 
                 <div class="matrix-wrapper">
-                    <h3>Bottom Layer</h3>
-                    <div class="matrix m-bot" id="matrix-bot">
-                        <!-- Cells populated by JS --></div>
+                    <h3 data-layer="bot">Bottom Layer</h3>
+                    <div class="layer-container" id="bot-layer-container" draggable="true"></div>
                 </div>
             </div>
 
             <div class="log-area">
-                <h3>Interaction Log & "Holding Bay"</h3>
-                <div id="holding-bay"></div>
-                <textarea id="log" readonly></textarea>
+                <h3>Temporary Holding Area</h3>
+                <div id="holding-bay-container" class="layer-container" draggable="true"></div>
             </div>
         </div>
     </div>
@@ -409,1003 +426,28 @@
     <!-- Welcome Popup -->
     <div id="welcome-popup-overlay">
         <div id="welcome-popup">
+            <h2 id="popup-title"></h2>
             <p id="popup-content"></p>
-            <button id="popup-continue-btn">Continue</button>
+            <div id="popup-buttons">
+                <button id="popup-dismiss-btn">Dismiss</button>
+                <button id="popup-next-btn">Next</button>
+            </div>
         </div>
     </div>
 
-    <!-- Three.js Library --><script type="importmap">
-        {
-            "imports": {
-                "three": "https://unpkg.com/three@0.164.1/build/three.module.js",
-                "three/addons/": "https://unpkg.com/three@0.164.1/examples/jsm/"
-            }
+
+
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://cdn.skypack.dev/three@0.128.0",
+          "three/addons/": "https://cdn.skypack.dev/three@0.128.0/examples/jsm/"
         }
+      }
     </script>
-    <script type="module">
-        import * as THREE from 'three';
-        import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
-
-        // --- Constants ---
-        const CUBE_COLORS = {
-            U: '#ffffff', // White
-            D: '#ffcf00', // Yellow
-            F: '#009e60', // Green
-            B: '#0051ba', // Blue
-            R: '#c41e3a', // Red
-            L: '#ff5800', // Orange
-            X: '#333333'  // For uncolored inner faces or middle of 2D middle matrix
-        };
-
-        const CUBIE_SIZE = 0.7;
-        const CUBE_GAP = 0.08; // Space between cubies
-        const PI = Math.PI;
-
-        // --- Three.js Globals ---
-        let scene, camera, renderer, orbitControls;
-        let raycaster, mouse;
-        let isAnimating = false; // Prevent multiple turns at once
-
-        // --- Rubik's Cube Logic (Simplified for demonstration) ---
-        const SOLVED_CUBE_STATE = [
-            // U-LAYER (Y=1)
-            { id: 'ULB', colors: { U: 'U', L: 'L', B: 'B' }, position: { x: -1, y: 1, z: -1 } },
-            { id: 'UB' , colors: { U: 'U', B: 'B' },          position: { x:  0, y: 1, z: -1 } },
-            { id: 'URB', colors: { U: 'U', R: 'R', B: 'B' }, position: { x:  1, y: 1, z: -1 } },
-            { id: 'UL' , colors: { U: 'U', L: 'L' },          position: { x: -1, y: 1, z:  0 } },
-            { id: 'U'  , colors: { U: 'U' },                   position: { x:  0, y: 1, z:  0 } }, // Center of U face
-            { id: 'UR' , colors: { U: 'U', R: 'R' },          position: { x:  1, y: 1, z:  0 } },
-            { id: 'ULF', colors: { U: 'U', L: 'L', F: 'F' }, position: { x: -1, y: 1, z:  1 } },
-            { id: 'UF' , colors: { U: 'U', F: 'F' },          position: { x:  0, y: 1, z:  1 } },
-            { id: 'URF', colors: { U: 'U', R: 'R', F: 'F' }, position: { x:  1, y: 1, z:  1 } },
-
-            // M-LAYER (Y=0)
-            { id: 'LB' , colors: { L: 'L', B: 'B' },          position: { x: -1, y: 0, z: -1 } },
-            { id: 'B'  , colors: { B: 'B' },                   position: { x:  0, y: 0, z: -1 } }, // Center of B face
-            { id: 'RB' , colors: { R: 'R', B: 'B' },          position: { x:  1, y: 0, z: -1 } },
-            { id: 'L'  , colors: { L: 'L' },                   position: { x: -1, y: 0, z:  0 } }, // Center of L face
-            { id: 'C'  , colors: {},                           position: { x:  0, y: 0, z:  0 } }, // Invisible core
-            { id: 'R'  , colors: { R: 'R' },                   position: { x:  1, y: 0, z:  0 } }, // Center of R face
-            { id: 'LF' , colors: { L: 'L', F: 'F' },          position: { x: -1, y: 0, z:  1 } },
-            { id: 'F'  , colors: { F: 'F' },                   position: { x:  0, y: 0, z:  1 } }, // Center of F face
-            { id: 'RF' , colors: { R: 'R', F: 'F' },          position: { x:  1, y: 0, z:  1 } },
-
-            // D-LAYER (Y=-1)
-            { id: 'DLB', colors: { D: 'D', L: 'L', B: 'B' }, position: { x: -1, y: -1, z: -1 } },
-            { id: 'DB' , colors: { D: 'D', B: 'B' },          position: { x:  0, y: -1, z: -1 } },
-            { id: 'DRB', colors: { D: 'D', R: 'R', B: 'B' }, position: { x:  1, y: -1, z: -1 } },
-            { id: 'DL' , colors: { D: 'D', L: 'L' },          position: { x: -1, y: -1, z:  0 } },
-            { id: 'D'  , colors: { D: 'D' },                   position: { x:  0, y: -1, z:  0 } }, // Center of D face
-            { id: 'DR' , colors: { D: 'D', R: 'R' },          position: { x:  1, y: -1, z:  0 } },
-            { id: 'DLF', colors: { D: 'D', L: 'L', F: 'F' }, position: { x: -1, y: -1, z:  1 } },
-            { id: 'DF' , colors: { D: 'D', F: 'F' },          position: { x:  0, y: -1, z:  1 } },
-            { id: 'DRF', colors: { D: 'D', R: 'R', F: 'F' }, position: { x:  1, y: -1, z:  1 } }
-        ];
-        let cubeState = [];
-
-        // --- DOM Elements ---
-        const threeContainer = document.getElementById('three-container');
-        const matrixTopEl = document.getElementById('matrix-top');
-        const matrixMidEl = document.getElementById('matrix-mid');
-        const matrixBotEl = document.getElementById('matrix-bot');
-        const btnReset3D = document.getElementById('reset-3d');
-        const btnSolve2D = document.getElementById('solve-2d-btn');
-        const logTextArea = document.getElementById('log');
-        const holdingBayEl = document.getElementById('holding-bay');
-        const matrixSelectionCheckboxes = document.querySelectorAll('input[name="matrix-select"]');
-
-
-        // --- 2D Interaction State ---
-        let matrixStates = { top: [], mid: [], bot: [], bay: [] };
-        let solved2DState = {};
-        let selectedMatrices = ['top', 'mid']; // Default selection
-        let draggedCubie = { cubieId: null, source: null, sourceIndex: -1 };
-        let isCurrentlyDragging = false;
-        let moveCount = 0;
-        let moveHistory = [];
-        let moves3DCount = 0;
-
-
-        // --- 2D Matrix Functions ---
-        function init2DInteraction() {
-            matrixSelectionCheckboxes.forEach(cb => cb.addEventListener('change', handleMatrixSelection));
-            const containers = { top: matrixTopEl, mid: matrixMidEl, bot: matrixBotEl, bay: holdingBayEl };
-            for (const key in containers) {
-                const el = containers[key];
-                el.dataset.matrixKey = key;
-                el.addEventListener('dragover', onDragOver);
-                el.addEventListener('dragenter', onDragEnter);
-                el.addEventListener('dragleave', onDragLeave);
-                el.addEventListener('drop', onDrop);
-            }
-            updateDropTargetHighlights();
-        }
-
-        function handleMatrixSelection() {
-            selectedMatrices = Array.from(matrixSelectionCheckboxes).filter(cb => cb.checked).map(cb => cb.value);
-            if (selectedMatrices.length !== 2) {
-                logMessage("2D: Please select exactly two matrices to work with.");
-            } else {
-                logMessage(`2D: Active matrices are [${selectedMatrices.join(', ')}].`);
-            }
-            render2DState(); // Re-render to apply new draggable states
-            updateDropTargetHighlights();
-        }
-
-        function update2DMatrices() {
-            const get2DIndex = (x, z) => (z + 1) * 3 + (x + 1);
-            const top = Array(9).fill(null), mid = Array(9).fill(null), bot = Array(9).fill(null);
-            cubeState.forEach(cubie => {
-                if (!cubie) return;
-                const { x, y, z } = cubie.position;
-                const index = get2DIndex(x, z);
-                if (y === 1) top[index] = cubie;
-                else if (y === 0) mid[index] = cubie;
-                else if (y === -1) bot[index] = cubie;
-            });
-            matrixStates = {
-                top: JSON.parse(JSON.stringify(top)),
-                mid: JSON.parse(JSON.stringify(mid)),
-                bot: JSON.parse(JSON.stringify(bot)),
-                bay: []
-            };
-            render2DState();
-        }
-
-        function render2DState() {
-            renderMatrix(matrixTopEl, matrixStates.top, 1);
-            renderMatrix(matrixMidEl, matrixStates.mid, 0);
-            renderMatrix(matrixBotEl, matrixStates.bot, -1);
-            renderHoldingBay();
-            updateDropTargetHighlights();
-        }
-
-        function renderHoldingBay() {
-            holdingBayEl.innerHTML = '';
-            matrixStates.bay.forEach((cubie, index) => {
-                if (!cubie) return;
-                const cellDiv = createCellDiv(cubie, 0);
-                cellDiv.dataset.source = 'bay';
-                cellDiv.dataset.sourceIndex = index;
-                cellDiv.addEventListener('dragstart', onDragStart);
-                cellDiv.addEventListener('dragend', onDragEnd);
-                cellDiv.draggable = true; // Items in the bay are always draggable
-                holdingBayEl.appendChild(cellDiv);
-            });
-        }
-
-        function renderMatrix(containerEl, matrixData, layerY) {
-            containerEl.innerHTML = '';
-            const matrixKey = containerEl.dataset.matrixKey;
-            const isMatrixSelected = selectedMatrices.includes(matrixKey);
-            matrixData.forEach((cubie, index) => {
-                const cellDiv = createCellDiv(cubie, layerY);
-                cellDiv.dataset.source = matrixKey;
-                cellDiv.dataset.sourceIndex = index;
-                const hasCubie = cubie && cubie.id !== 'C';
-                if (hasCubie) {
-                    cellDiv.addEventListener('dragstart', onDragStart);
-                    cellDiv.addEventListener('dragend', onDragEnd);
-                }
-                cellDiv.draggable = hasCubie && isMatrixSelected;
-                containerEl.appendChild(cellDiv);
-            });
-        }
-
-        function createCellDiv(cubie, layerY) {
-            const cellDiv = document.createElement('div');
-            cellDiv.classList.add('matrix-cell');
-            if (!cubie || cubie.id === 'C') {
-                cellDiv.style.backgroundColor = CUBE_COLORS.X;
-                cellDiv.draggable = false;
-                return cellDiv;
-            }
-            cellDiv.dataset.cubieId = cubie.id;
-
-            const { colors } = cubie;
-            const colorKeys = Object.keys(colors);
-            const numColors = colorKeys.length;
-            cellDiv.dataset.colors = numColors;
-
-            if (numColors === 1) {
-                const colorSquare = document.createElement('div');
-                colorSquare.classList.add('color-square');
-                colorSquare.style.backgroundColor = CUBE_COLORS[Object.values(colors)[0]];
-                cellDiv.appendChild(colorSquare);
-            } else if (numColors === 2) {
-                const [c1, c2] = Object.values(colors).sort();
-                const sq1 = document.createElement('div');
-                sq1.classList.add('color-square');
-                sq1.style.backgroundColor = CUBE_COLORS[c1];
-                const sq2 = document.createElement('div');
-                sq2.classList.add('color-square');
-                sq2.style.backgroundColor = CUBE_COLORS[c2];
-                cellDiv.appendChild(sq1);
-                cellDiv.appendChild(sq2);
-            } else if (numColors === 3) {
-                let primaryFace = colorKeys.find(k => k === 'U' || k === 'D');
-                if (!primaryFace) primaryFace = colorKeys.sort()[0];
-
-                const otherFaces = colorKeys.filter(k => k !== primaryFace).sort();
-
-                const primarySq = document.createElement('div');
-                primarySq.classList.add('color-square');
-                primarySq.style.backgroundColor = CUBE_COLORS[colors[primaryFace]];
-                
-                const otherSq1 = document.createElement('div');
-                otherSq1.classList.add('color-square');
-                otherSq1.style.backgroundColor = CUBE_COLORS[colors[otherFaces[0]]];
-
-                const otherSq2 = document.createElement('div');
-                otherSq2.classList.add('color-square');
-                otherSq2.style.backgroundColor = CUBE_COLORS[colors[otherFaces[1]]];
-
-                cellDiv.appendChild(primarySq);
-                cellDiv.appendChild(otherSq1);
-                cellDiv.appendChild(otherSq2);
-            }
-            return cellDiv;
-        }
-
-        function onDragStart(e) {
-            if (isCurrentlyDragging) {
-                e.preventDefault();
-                return;
-            }
-            isCurrentlyDragging = true;
-            const target = e.target.closest('.matrix-cell');
-            draggedCubie = {
-                cubieId: target.dataset.cubieId,
-                source: target.dataset.source,
-                sourceIndex: parseInt(target.dataset.sourceIndex, 10)
-            };
-            e.dataTransfer.setData('text/plain', draggedCubie.cubieId);
-            e.dataTransfer.effectAllowed = 'move';
-            setTimeout(() => target.classList.add('dragging'), 0);
-            logMessage(`2D: Picked up ${draggedCubie.cubieId}.`);
-        }
-
-        function onDragOver(e) { e.preventDefault(); }
-        function onDragEnter(e) {
-            const target = e.target.closest('.matrix, #holding-bay');
-            if (target && target.classList.contains('drop-target')) {
-                // You could add a more specific hover effect here
-            }
-        }
-        function onDragLeave(e) { /* Handle leaving a drop target if needed */ }
-
-        function onDragEnd(e) {
-            isCurrentlyDragging = false;
-            document.querySelectorAll('.dragging').forEach(el => el.classList.remove('dragging'));
-        }
-
-        function onDrop(e) {
-            e.preventDefault();
-            const dropContainer = e.target.closest('.matrix, #holding-bay');
-            if (!dropContainer || !dropContainer.classList.contains('drop-target')) {
-                logMessage("2D: Cannot drop here. This area is not an active target.");
-                return;
-            }
-            const targetKey = dropContainer.dataset.matrixKey;
-            const cubieData = (draggedCubie.source === 'bay')
-                ? matrixStates.bay[draggedCubie.sourceIndex]
-                : matrixStates[draggedCubie.source][draggedCubie.sourceIndex];
-            
-            if (!cubieData) return;
-
-            const dropCell = e.target.closest('.matrix-cell');
-            if (targetKey === 'bay') {
-                if (draggedCubie.source !== 'bay') {
-                    matrixStates[draggedCubie.source][draggedCubie.sourceIndex] = null;
-                    matrixStates.bay.push(cubieData);
-                    logMessage(`2D: Moved ${cubieData.id} to Holding Bay.`);
-                }
-                render2DState();
-                return;
-            }
-            
-            const targetIndex = dropCell ? parseInt(dropCell.dataset.sourceIndex, 10) : -1;
-            if (targetIndex === -1) return;
-
-            const getCubieType = (cubie) => {
-                if (!cubie || cubie.id === 'C') return 0;
-                return Object.keys(cubie.colors).length;
-            };
-
-            const getSlotType = (matrixKey, index) => {
-                if (!matrixKey || index < 0) return -1; // Invalid slot
-                const y = matrixKey === 'top' ? 1 : (matrixKey === 'bot' ? -1 : 0);
-                const z = Math.floor(index / 3) - 1;
-                const x = index % 3 - 1;
-                const originalCubie = SOLVED_CUBE_STATE.find(c => 
-                    c.position.x === x && c.position.y === y && c.position.z === z
-                );
-                return getCubieType(originalCubie);
-            };
-
-            const sourceCubieType = getCubieType(cubieData);
-            const targetSlotType = getSlotType(targetKey, targetIndex);
-
-            if (sourceCubieType !== targetSlotType) {
-                logMessage(`2D: Illegal move. A ${sourceCubieType}-color piece cannot go in a ${targetSlotType}-color slot.`);
-                return;
-            }
-
-            const targetCubieData = matrixStates[targetKey][targetIndex];
-            if (targetCubieData) {
-                 const sourceSlotType = getSlotType(draggedCubie.source, draggedCubie.sourceIndex);
-                 const targetCubieType = getCubieType(targetCubieData);
-                 if (targetCubieType !== sourceSlotType && draggedCubie.source !== 'bay') {
-                    logMessage(`2D: Illegal swap. A ${targetCubieType}-color piece cannot go in a ${sourceSlotType}-color slot.`);
-                    return;
-                 }
-            }
-
-            // Perform the swap
-            if (draggedCubie.source === 'bay') {
-                // The dragged item came from the bay.
-                matrixStates[targetKey][targetIndex] = cubieData;
-                matrixStates.bay.splice(draggedCubie.sourceIndex, 1);
-                if (targetCubieData) {
-                    // The target cell was occupied, so move its piece to the bay.
-                    matrixStates.bay.push(targetCubieData);
-                }
-            } else {
-                // This was a matrix-to-matrix swap. A temporary variable ensures a correct swap.
-                const temp = matrixStates[draggedCubie.source][draggedCubie.sourceIndex];
-                matrixStates[draggedCubie.source][draggedCubie.sourceIndex] = matrixStates[targetKey][targetIndex];
-                matrixStates[targetKey][targetIndex] = temp;
-            }
-            logMessage(`2D: Swapped ${cubieData.id} with ${targetCubieData ? targetCubieData.id : 'empty space'}.`);
-            
-            render2DState();
-            update3DCubeFrom2DMatrices();
-        }
-
-        function update3DCubeFrom2DMatrices() {
-            if (matrixStates.bay.length > 0) {
-                logMessage("Cannot update 3D cube while pieces are in the holding bay.");
-                return;
-            }
-
-            const newCubeState = [];
-            const get3DPosition = (matrixKey, index) => {
-                const y = matrixKey === 'top' ? 1 : (matrixKey === 'bot' ? -1 : 0);
-                const z = Math.floor(index / 3) - 1;
-                const x = index % 3 - 1;
-                return { x, y, z };
-            };
-
-            ['top', 'mid', 'bot'].forEach(key => {
-                matrixStates[key].forEach((cubie, index) => {
-                    if (cubie) {
-                        const newPosition = get3DPosition(key, index);
-                        const updatedCubie = JSON.parse(JSON.stringify(cubie));
-                        updatedCubie.position = newPosition;
-                        newCubeState.push(updatedCubie);
-                    }
-                });
-            });
-            
-            if (newCubeState.length === 27) {
-                cubeState = newCubeState;
-                create3DCubeVisual();
-                logMessage("3D cube updated from 2D matrix change.");
-            } else {
-                logMessage(`Error: 2D state is incomplete (${newCubeState.length}/27 pieces). Cannot update 3D cube.`);
-                console.error("Generated cube state is incomplete:", newCubeState);
-            }
-        }
-
-
-
-        function updateDropTargetHighlights() {
-            const all = { top: matrixTopEl, mid: matrixMidEl, bot: matrixBotEl, bay: holdingBayEl };
-            for (const key in all) {
-                all[key].classList.toggle('drop-target', key === 'bay' || selectedMatrices.includes(key));
-            }
-        }
-
-        function updateCubeStateFrom3DMeshes() {
-            cubeState = [];
-            // Add the hidden center cubie back in for completeness of cubeState array
-            cubeState.push(SOLVED_CUBE_STATE.find(c => c.id === 'C')); 
-
-            scene.children.forEach(obj => {
-                if (obj.userData && obj.userData.id && obj.userData.id !== 'C') {
-                    cubeState.push({
-                        id: obj.userData.id,
-                        colors: obj.userData.colors, // Colors are now correctly updated
-                        position: { ...obj.userData.position }
-                    });
-                }
-            });
-            // Sort to maintain consistent order for debugging, optional.
-            cubeState.sort((a,b) => {
-                if (a.position.y !== b.position.y) return b.position.y - a.position.y;
-                if (a.position.z !== b.position.z) return b.position.z - a.position.z;
-                return a.position.x - b.position.x;
-            });
-        }
-
-        // --- Three.js Functions ---
-        function initThreeJS() {
-            scene = new THREE.Scene();
-            scene.background = new THREE.Color(0x2a2a2a);
-            camera = new THREE.PerspectiveCamera(70, threeContainer.clientWidth / threeContainer.clientHeight, 0.1, 100);
-            camera.position.set(2, 2.5, 4.5);
-            camera.lookAt(0, 0, 0);
-            renderer = new THREE.WebGLRenderer({ antialias: true });
-            renderer.setSize(threeContainer.clientWidth, threeContainer.clientHeight);
-            renderer.outputColorSpace = THREE.SRGBColorSpace;
-            threeContainer.appendChild(renderer.domElement);
-            const ambientLight = new THREE.AmbientLight(0xffffff, 1.0);
-            scene.add(ambientLight);
-            const dirLight = new THREE.DirectionalLight(0xffffff, 0.8);
-            dirLight.position.set(5, 5, 5);
-            scene.add(dirLight);
-            orbitControls = new OrbitControls(camera, renderer.domElement);
-            orbitControls.enableDamping = true;
-            orbitControls.dampingFactor = 0.05;
-            orbitControls.minDistance = 2;
-            orbitControls.maxDistance = 10;
-            raycaster = new THREE.Raycaster();
-            mouse = new THREE.Vector2();
-            window.addEventListener('resize', onWindowResize);
-            window.addEventListener('keydown', onKeyDown);
-        }
-
-        function createCubieMesh(cubieData) {
-            const materials = Array.from({ length: 6 }, () => new THREE.MeshStandardMaterial({
-                color: CUBE_COLORS.X,
-                roughness: 0.6,
-                metalness: 0.1,
-                transparent: true,
-                opacity: 0.95
-            }));
-            const geometry = new THREE.BoxGeometry(CUBIE_SIZE, CUBIE_SIZE, CUBIE_SIZE);
-            const cubieMesh = new THREE.Mesh(geometry, materials);
-            const faceMap = { R: 0, L: 1, U: 2, D: 3, F: 4, B: 5 };
-            for (const faceKey in cubieData.colors) {
-                const materialIndex = faceMap[faceKey];
-                if (materialIndex !== undefined) {
-                    cubieMesh.material[materialIndex].color.set(CUBE_COLORS[cubieData.colors[faceKey]]);
-                    cubieMesh.material[materialIndex].opacity = 1.0;
-                }
-            }
-            cubieMesh.position.set(
-                cubieData.position.x * (CUBIE_SIZE + CUBE_GAP),
-                cubieData.position.y * (CUBIE_SIZE + CUBE_GAP),
-                cubieData.position.z * (CUBIE_SIZE + CUBE_GAP)
-            );
-            cubieMesh.userData = { id: cubieData.id, colors: cubieData.colors, position: { ...cubieData.position } };
-            return cubieMesh;
-        }
-
-        function create3DCubeVisual() {
-            scene.children.filter(c => c.userData.id).forEach(c => {
-                scene.remove(c);
-                c.geometry.dispose();
-                c.material.forEach(m => m.dispose());
-            });
-            cubeState.forEach(cubieData => {
-                if (cubieData.id !== 'C') scene.add(createCubieMesh(cubieData));
-            });
-        }
-
-        function resetCubeState() {
-            cubeState = JSON.parse(JSON.stringify(SOLVED_CUBE_STATE));
-            if (scene) create3DCubeVisual();
-            update2DMatrices();
-            solved2DState = JSON.parse(JSON.stringify(matrixStates));
-            logMessage("3D cube reset to solved state.");
-
-            // Reset counters and history
-            moveCount = 0;
-            document.getElementById('move-counter').innerText = 'Moves: 0';
-            moves3DCount = 0;
-            document.getElementById('moves-3d').innerText = 'Moves: 0';
-            moveHistory = [];
-        }
-
-        function animate() {
-            requestAnimationFrame(animate);
-            orbitControls.update();
-            renderer.render(scene, camera);
-        }
-
-        function onWindowResize() {
-            camera.aspect = threeContainer.clientWidth / threeContainer.clientHeight;
-            camera.updateProjectionMatrix();
-            renderer.setSize(threeContainer.clientWidth, threeContainer.clientHeight);
-        }
-
-        function onKeyDown(event) {
-            if (isAnimating) return;
-            const keyMap = {
-                'U': { axis: 'y', v: 1, d: 1 }, 'u': { axis: 'y', v: 1, d: -1 },
-                'D': { axis: 'y', v: -1, d: 1 }, 'd': { axis: 'y', v: -1, d: -1 },
-                'L': { axis: 'x', v: -1, d: 1 }, 'l': { axis: 'x', v: -1, d: -1 },
-                'R': { axis: 'x', v: 1, d: 1 }, 'r': { axis: 'x', v: 1, d: -1 },
-                'F': { axis: 'z', v: 1, d: 1 }, 'f': { axis: 'z', v: 1, d: -1 },
-                'B': { axis: 'z', v: -1, d: 1 }, 'b': { axis: 'z', v: -1, d: -1 },
-                'M': { axis: 'x', v: 0, d: -1 }, 'm': { axis: 'x', v: 0, d: 1 },
-                'E': { axis: 'y', v: 0, d: -1 }, 'e': { axis: 'y', v: 0, d: 1 },
-                'S': { axis: 'z', v: 0, d: 1 }, 's': { axis: 'z', v: 0, d: -1 },
-            };
-            if (!keyMap[event.key]) return;
-
-            moveHistory.push(event.key);
-            moves3DCount++;
-            document.getElementById('moves-3d').innerText = `Moves: ${moves3DCount}`;
-
-            const { axis: axisChar, v, d } = keyMap[event.key];
-            const axis = new THREE.Vector3(axisChar === 'x' ? 1 : 0, axisChar === 'y' ? 1 : 0, axisChar === 'z' ? 1 : 0);
-            const cubiesToRotate = scene.children.filter(c => c.isMesh && c.userData.position && Math.abs(c.userData.position[axisChar] - v) < 0.1);
-            if (cubiesToRotate.length > 0) {
-                logMessage(`Key '${event.key}' pressed. Rotating slice ${axisChar}=${v}.`);
-                performFaceTurn(cubiesToRotate, axis, d);
-            }
-        }
-
-        function rotateCubieColors(colors, axis, direction) {
-            const newColors = {};
-            const maps = {
-                y: { F: 'R', R: 'B', B: 'L', L: 'F' },
-                x: { U: 'F', F: 'D', D: 'B', B: 'U' },
-                z: { U: 'L', L: 'D', D: 'R', R: 'U' }
-            };
-            const inverseMaps = {
-                y: { R: 'F', B: 'R', L: 'B', F: 'L' },
-                x: { F: 'U', D: 'F', B: 'D', U: 'B' },
-                z: { L: 'U', D: 'L', R: 'D', U: 'R' }
-            };
-            const map = direction === 1 ? maps[axis] : inverseMaps[axis];
-            for (const key in colors) {
-                newColors[map[key] || key] = colors[key];
-            }
-            return newColors;
-        }
-
-        async function performFaceTurn(cubies, axis, direction) {
-            isAnimating = true;
-            orbitControls.enabled = false;
-            const angle = direction * Math.PI / 2;
-            const group = new THREE.Group();
-            cubies.forEach(cubie => group.add(cubie));
-            scene.add(group);
-            const duration = 300;
-            const start = Date.now();
-
-            await new Promise(resolve => {
-                function animateRotation() {
-                    const progress = Math.min((Date.now() - start) / duration, 1);
-                    group.rotation.setFromVector3(axis.clone().multiplyScalar(progress * angle));
-                    if (progress < 1) {
-                        requestAnimationFrame(animateRotation);
-                    } else {
-                        const rotationMatrix = new THREE.Matrix4().makeRotationAxis(axis, angle);
-                        group.children.slice().forEach(cubie => {
-                            cubie.applyMatrix4(rotationMatrix);
-                            scene.add(cubie);
-                            const newPos = cubie.position.clone().divideScalar(CUBIE_SIZE + CUBE_GAP).round();
-                            cubie.userData.position = { x: newPos.x, y: newPos.y, z: newPos.z };
-                            const axisChar = axis.x ? 'x' : (axis.y ? 'y' : 'z');
-                            cubie.userData.colors = rotateCubieColors(cubie.userData.colors, axisChar, direction);
-                        });
-                        scene.remove(group);
-                        updateCubeStateFrom3DMeshes();
-                        update2DMatrices();
-                        isAnimating = false;
-                        orbitControls.enabled = true;
-                        logMessage(`3D: Performed a ${direction === 1 ? 'CW' : 'CCW'} turn.`);
-                        resolve();
-                    }
-                }
-                animateRotation();
-            });
-        }
-
-        // --- 3D Solver Functions ---
-        const btnSolve3D = document.getElementById('solve-3d');
-
-        async function solve3DCube() {
-            if (isAnimating) return;
-            
-            isSolving = true; // Use the same flag to prevent other actions
-            btnSolve3D.disabled = true;
-            logMessage("Starting 3D cube auto-solve by reversing moves...");
-
-            const inverseMoveMap = {
-                'U': 'u', 'u': 'U', 'D': 'd', 'd': 'D',
-                'L': 'l', 'l': 'L', 'R': 'r', 'r': 'R',
-                'F': 'f', 'f': 'F', 'B': 'b', 'b': 'B',
-                'M': 'm', 'm': 'M', 'E': 'e', 'e': 'E',
-                'S': 's', 's': 'S'
-            };
-
-            const keyMap = {
-                'U': { axis: 'y', v: 1, d: 1 }, 'u': { axis: 'y', v: 1, d: -1 },
-                'D': { axis: 'y', v: -1, d: 1 }, 'd': { axis: 'y', v: -1, d: -1 },
-                'L': { axis: 'x', v: -1, d: 1 }, 'l': { axis: 'x', v: -1, d: -1 },
-                'R': { axis: 'x', v: 1, d: 1 }, 'r': { axis: 'x', v: 1, d: -1 },
-                'F': { axis: 'z', v: 1, d: 1 }, 'f': { axis: 'z', v: 1, d: -1 },
-                'B': { axis: 'z', v: -1, d: 1 }, 'b': { axis: 'z', v: -1, d: -1 },
-                'M': { axis: 'x', v: 0, d: -1 }, 'm': { axis: 'x', v: 0, d: 1 },
-                'E': { axis: 'y', v: 0, d: -1 }, 'e': { axis: 'y', v: 0, d: 1 },
-                'S': { axis: 'z', v: 0, d: 1 }, 's': { axis: 'z', v: 0, d: -1 },
-            };
-
-            const reversedHistory = moveHistory.slice().reverse();
-            for (const move of reversedHistory) {
-                const inverseMove = inverseMoveMap[move];
-                if (inverseMove) {
-                    const { axis: axisChar, v, d } = keyMap[inverseMove];
-                    const axis = new THREE.Vector3(axisChar === 'x' ? 1 : 0, axisChar === 'y' ? 1 : 0, axisChar === 'z' ? 1 : 0);
-                    const cubiesToRotate = scene.children.filter(c => c.isMesh && c.userData.position && Math.abs(c.userData.position[axisChar] - v) < 0.1);
-                    
-                    if (cubiesToRotate.length > 0) {
-                        logMessage(`Solving: Performing inverse of '${move}' -> '${inverseMove}'`);
-                        await performFaceTurn(cubiesToRotate, axis, d);
-                        await wait(50); // Small delay between solve moves
-                    }
-                }
-            }
-
-            logMessage("3D cube solve complete!");
-            moveHistory = [];
-            moves3DCount = 0;
-            document.getElementById('moves-3d').innerText = 'Moves: 0';
-            isSolving = false;
-            btnSolve3D.disabled = false;
-        }
-        
-        btnSolve3D.addEventListener('click', solve3DCube);
-
-
-        // --- 2D Solver Functions ---
-
-        function sleep(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-
-        let isSolving = false;
-
-        async function solve2DPuzzle() {
-            if (isSolving || isAnimating) {
-                logMessage("Solver or animation is already running.");
-                return;
-            }
-            isSolving = true;
-            btnSolve2D.disabled = true;
-            moveCount = 0;
-            document.getElementById('move-counter').innerText = 'Moves: 0';
-            logMessage("Starting 2D puzzle auto-solve...");
-
-            if (matrixStates.bay.length > 0) {
-                logMessage("Please empty the holding bay before solving.");
-                isSolving = false;
-                btnSolve2D.disabled = false;
-                return;
-            }
-
-            const layers = ['top', 'mid', 'bot'];
-            for (const layerName of layers) {
-                for (let i = 0; i < 9; i++) {
-                    const targetPiece = solved2DState[layerName][i];
-                    if (!targetPiece) continue; // Skip empty center like in middle layer
-
-                    const currentPiece = matrixStates[layerName][i];
-
-                    if (!currentPiece || currentPiece.id !== targetPiece.id) {
-                        logMessage(`Position ${layerName}[${i}] is wrong. Should be ${targetPiece.id}.`);
-                        const targetPiecePos = findPieceIn2DState(targetPiece.id);
-                        
-                        if (targetPiecePos) {
-                            logMessage(`Found ${targetPiece.id} at ${targetPiecePos.key}[${targetPiecePos.index}]. Swapping.`);
-                            const sourcePos = { key: layerName, index: i };
-                            await intelligentSwap(sourcePos, targetPiecePos);
-                        } else {
-                            logMessage(`Error: Could not find piece ${targetPiece.id}!`);
-                        }
-                    }
-                }
-            }
-
-            logMessage("2D puzzle solve complete!");
-            isSolving = false;
-            btnSolve2D.disabled = false;
-            ['top', 'mid', 'bot'].forEach(l => {
-                const wrapper = document.getElementById(`matrix-${l}`).parentElement;
-                wrapper.classList.remove('inactive');
-            });
-        }
-
-        function findPieceIn2DState(cubieId) {
-            const layers = ['top', 'mid', 'bot'];
-            for (const key of layers) {
-                const index = matrixStates[key].findIndex(c => c && c.id === cubieId);
-                if (index !== -1) return { key, index };
-            }
-            const bayIndex = matrixStates.bay.findIndex(c => c && c.id === cubieId);
-            if (bayIndex !== -1) return { key: 'bay', index: bayIndex };
-            return null;
-        }
-
-        function getPiece(pos) {
-            if (!pos || !matrixStates[pos.key]) return null;
-            return matrixStates[pos.key][pos.index];
-        }
-
-        function setPiece(pos, piece) {
-            if (!pos || !matrixStates[pos.key]) return;
-            matrixStates[pos.key][pos.index] = piece;
-        }
-
-        async function intelligentSwap(pos1, pos2) {
-            const areAdjacent = (k1, k2) => {
-                if (k1 === 'bay' || k2 === 'bay') return true;
-                const layerMap = { top: 0, mid: 1, bot: 2 };
-                return Math.abs(layerMap[k1] - layerMap[k2]) <= 1;
-            };
-
-            if (areAdjacent(pos1.key, pos2.key)) {
-                await atomicSwap(pos1, pos2);
-            } else if (pos1.key === pos2.key) {
-                logMessage("Same layer swap: using helper layer.");
-                const helperKey = pos1.key === 'mid' ? 'top' : 'mid';
-                const tempPos = { key: helperKey, index: 4 }; // Center of helper layer
-
-                await atomicSwap(pos1, tempPos);
-                await atomicSwap(pos2, tempPos);
-                await atomicSwap(pos1, tempPos);
-            } else {
-                logMessage("Top/Bottom swap: using holding bay.");
-                if (matrixStates.bay.length > 0) {
-                    logMessage("Holding bay must be empty for complex swaps.");
-                    isSolving = false;
-                    return;
-                }
-                const holdingPos = { key: 'bay', index: 0 };
-                matrixStates.bay.push(null);
-
-                await atomicSwap(pos1, holdingPos);
-                await atomicSwap(pos2, holdingPos);
-                await atomicSwap(pos1, holdingPos);
-
-                matrixStates.bay.pop();
-            }
-        }
-
-        async function atomicSwap(pos1, pos2) {
-            moveCount++;
-            document.getElementById('move-counter').innerText = `Moves: ${moveCount}`;
-            const delay = 300;
-            
-            const layerKeyMap = { top: 'top', mid: 'mid', bot: 'bot' };
-            const checkboxFor = (key) => document.querySelector(`input[value="${key}"]`);
-
-            // De-select all
-            ['top', 'mid', 'bot'].forEach(k => {
-                if (checkboxFor(k).checked) checkboxFor(k).click();
-            });
-            
-            // Select necessary layers
-            if (pos1.key !== 'bay' && !checkboxFor(layerKeyMap[pos1.key]).checked) checkboxFor(layerKeyMap[pos1.key]).click();
-            if (pos2.key !== 'bay' && !checkboxFor(layerKeyMap[pos2.key]).checked) checkboxFor(layerKeyMap[pos2.key]).click();
-            
-            // Ensure two are selected for UI consistency
-            if (selectedMatrices.length < 2) {
-                const missing = ['top', 'mid', 'bot'].find(k => !selectedMatrices.includes(k));
-                if(missing) checkboxFor(missing).click();
-            }
-            
-            // Move inactive layer
-            const allLayers = ['top', 'mid', 'bot'];
-            const activeLayers = selectedMatrices;
-            const inactiveLayer = allLayers.find(l => !activeLayers.includes(l));
-
-            allLayers.forEach(l => {
-                const wrapper = document.getElementById(`matrix-${l}`).parentElement;
-                wrapper.classList.toggle('inactive', l === inactiveLayer);
-            });
-
-            await sleep(delay / 2);
-
-            const piece1 = getPiece(pos1);
-            const piece2 = getPiece(pos2);
-            setPiece(pos1, piece2);
-            setPiece(pos2, piece1);
-            
-            logMessage(`Swapped ${piece1 ? piece1.id : "empty"} and ${piece2 ? piece2.id : "empty"}.`);
-
-            render2DState();
-            await sleep(delay);
-        }
-
-
-        // --- Event Listeners ---
-        btnReset3D.addEventListener('click', resetCubeState);
-        btnSolve2D.addEventListener('click', solve2DPuzzle);
-
-        // --- Utility Functions ---
-        function logMessage(msg) {
-            logTextArea.value += `> ${msg}\n`;
-            logTextArea.scrollTop = logTextArea.scrollHeight;
-        }
-
-        function wait(ms) {
-            return new Promise(resolve => setTimeout(resolve, ms));
-        }
-
-        // --- Initialization ---
-        initThreeJS();
-        resetCubeState(); // Initialize cubeState to solved, which also calls update2DMatrices
-        init2DInteraction();
-        animate();
-
-    </script>
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // --- Welcome Popup Logic ---
-        const popupOverlay = document.getElementById('welcome-popup-overlay');
-        const popupContent = document.getElementById('popup-content');
-        const continueBtn = document.getElementById('popup-continue-btn');
-
-        const tutorialTexts = [
-            "Rubik's Cubes are 3D objects (it's a cube, after all) and we are used to solving them in 3D space -- by twisting it along any of the three different axes.",
-            "But you can also represent the Cube in 2D space. For this demo, I chopped it into 3 slices. The top slice represents the 9 blocks in the top layer, the middle slice represents the 8 block in the middle layer. (The center block isn't part of the puzzle.)",
-            "This demo is meant to illustrate that taking 3D data (the original Cube) and chopping it into 2D data makes it harder to do stuff. In this case, we can see that solving the puzzle is harder and less intuitive when working with the 2D, flat representation.",
-            "To use the demo: first scramble the 3D cube using the keyboard shortcuts. You'll see the 2D puzzle change to match the 3D version.",
-            "Each square in the 2D version contains the same info as in the 3D version. The corner square in the top layer, for example, has the same three colors on the top corner of the 3D cube.",
-            "When you click \"Solve 2D puzzle\", the app starts swapping tiles around in order to restore the original layout. It worls with just 2 layers at a time (a bit like matrix multiplication) and uses the Holding Bay to temporarily store pieces that should go in the third layer.",
-            "The \"Solve 2D puzzle\" button is meant to show that solving the puzzle in 2D is unintuitive and takes a lot of steps.",
-            "When you click \"Solve the puzzle in 3D\", the cube reverses the moves you made to get back to the original position. The idea is that this is much more intuitive (you can see how blocks relate to each other in 3D space) and faster and easier to solve.",
-            "That's it. Give it a try!"
-        ];
-
-        let currentTextIndex = 0;
-
-        function showWelcomePopup() {
-            popupContent.innerHTML = tutorialTexts[currentTextIndex];
-            popupOverlay.style.display = 'flex';
-        }
-
-        function nextWelcomeText() {
-            currentTextIndex++;
-            if (currentTextIndex < tutorialTexts.length) {
-                popupContent.innerHTML = tutorialTexts[currentTextIndex];
-                if (currentTextIndex === tutorialTexts.length - 1) {
-                    continueBtn.textContent = 'Give it a try!';
-                }
-            } else {
-                hideWelcomePopup();
-            }
-        }
-
-        function hideWelcomePopup() {
-            popupOverlay.style.display = 'none';
-            startContextualPopups();
-        }
-
-        continueBtn.addEventListener('click', nextWelcomeText);
-
-        // --- Contextual Popup Logic (Simplified) ---
-        const contextualPopups = [
-            {
-                element: '#matrix-mid',
-                text: "This 2D representation has the same info as the 3D cube. Each tile shows the same colors as the corresponding block in the cube. It's just been flattened.",
-                position: 'right'
-            },
-            {
-                element: '#three-container',
-                text: "Try twisting the cube using the keyboard shortcuts.",
-                position: 'right'
-            },
-            {
-                element: '#demo-2d',
-                text: "The 2D representation updates to match the cube.",
-                position: 'right',
-                duration: 3000
-            },
-            {
-                element: '#solve-2d-btn',
-                text: "Click the 'Solve 2D Puzzle' button to solve it. You'll see it takes a lot of steps and it's hard to follow what's going on. That's because it's very hard to see how all the tiles relate to each other.",
-                position: 'bottom',
-                duration: 3000
-            },
-            {
-                element: '#solve-3d',
-                text: "When we keep the 3D representation of the data, you get a holistic view of what's going on. It's easier to solve. And faster, since you can manipulate the cube along 3 different axes.",
-                position: 'bottom'
-            }
-        ];
-
-        let activePopup = null;
-
-        function createPopup(popupInfo) {
-            if (activePopup) {
-                document.body.removeChild(activePopup);
-            }
-
-            const targetElement = document.querySelector(popupInfo.element);
-            if (!targetElement) {
-                console.error("Contextual popup target not found:", popupInfo.element);
-                return null;
-            }
-
-            const popup = document.createElement('div');
-            popup.className = `contextual-popup popup-${popupInfo.position}`;
-            popup.innerHTML = popupInfo.text;
-            document.body.appendChild(popup);
-            activePopup = popup;
-
-            const targetRect = targetElement.getBoundingClientRect();
-            const popupRect = popup.getBoundingClientRect();
-
-            let top, left;
-
-            switch (popupInfo.position) {
-                case 'right':
-                    top = targetRect.top + (targetRect.height / 2) - (popupRect.height / 2);
-                    left = targetRect.right + 20;
-                    break;
-                case 'left':
-                    top = targetRect.top + (targetRect.height / 2) - (popupRect.height / 2);
-                    left = targetRect.left - popupRect.width - 20;
-                    break;
-                case 'bottom':
-                    top = targetRect.bottom + 20;
-                    left = targetRect.left + (targetRect.width / 2) - (popupRect.width / 2);
-                    break;
-                case 'top':
-                    top = targetRect.top - popupRect.height - 20;
-                    left = targetRect.left + (targetRect.width / 2) - (popupRect.width / 2);
-                    break;
-            }
-
-            popup.style.top = `${top + window.scrollY}px`;
-            popup.style.left = `${left + window.scrollX}px`;
-            
-            return popup;
-        }
-
-        async function startContextualPopups() {
-            for (const popupInfo of contextualPopups) {
-                const popupElement = createPopup(popupInfo);
-                if (!popupElement) continue; // Skip if target element not found
-
-                if (popupInfo.duration) {
-                    await new Promise(resolve => setTimeout(resolve, popupInfo.duration));
-                } else {
-                    await new Promise(resolve => {
-                        const onClick = (event) => {
-                            // Prevent clicks inside the popup from closing it
-                            if (event.target.closest('.contextual-popup')) {
-                                return;
-                            }
-                            document.body.removeEventListener('click', onClick, true);
-                            resolve();
-                        };
-                        // Use capture to catch the click early
-                        document.body.addEventListener('click', onClick, true);
-                    });
-                }
-            }
-            // After the loop, remove the last popup
-            if (activePopup) {
-                document.body.removeChild(activePopup);
-                activePopup = null;
-            }
-        }
-
-        // --- Initializer ---
-        // Check if the user has visited before. For this demo, we can use sessionStorage.
-        if (!sessionStorage.getItem('hasVisitedRubikDemo')) {
-            showWelcomePopup();
-            sessionStorage.setItem('hasVisitedRubikDemo', 'true');
-        }
-    });
-    </script>
+    <script src="popups.js"></script>
+    <script type="module" src="main.js"></script>
 </body>
 </html>
+
+        
